@@ -1,9 +1,7 @@
-import React from "react";
+import React, { useLayoutEffect, useState } from "react";
 import PropTypes from "prop-types";
 import profilePicture from "./images/pfp.jpg";
 import "./Homepage.css";
-
-console.log(profilePicture);
 
 /**
  * Represents the homepage for my website.
@@ -80,46 +78,70 @@ CircularImage.propTypes = {
 };
 
 /**
+ * useWindowSize has the latest window width.
+ * @return {[number, number]} width, height
+ */
+function useWindowSize() {
+	const [size, setSize] = useState([0, 0]);
+	useLayoutEffect(() => {
+		// eslint-disable-next-line require-jsdoc
+		function updateSize() {
+			setSize([window.innerWidth, window.innerHeight]);
+		}
+		window.addEventListener("resize", updateSize);
+		updateSize();
+		return () => window.removeEventListener("resize", updateSize);
+	}, []);
+	return size;
+}
+
+/**
+ * useWindowWidth uses the width from useWindowSize
+ * @return {number} width
+ */
+function useWindowWidth() {
+	return useWindowSize()[0];
+}
+
+/**
  * Creates a group of links for the navigation bar.
  * The links will be side by side on desktop, and
  * in a hamburger menu on mobile.
+ * @return { element }
  */
-class NavLinkGroup extends React.Component {
-	/**
-	 * Creates a stateful component based on
-	 * window size
-	 * @param {object} props
-	 */
-	constructor(props) {
-		super(props);
-		this.state = { width: window.innerHeight };
+function NavLinkGroup() {
+	// const [width, height] = useWindowSize();
+	const width = useWindowWidth();
+	console.log(width);
+	if (width < 600) {
+		return <span>Window size: {width}</span>;
+	} else {
+		return <NavLinkList />;
 	}
-	/**
-	 * Renders NavLinkGroup
-	 * @return {element}
-	 */
-	render() {
-		console.log(this.state);
-		if (this.state.innerWidth < 600) {
-			return <div id="NavLinkGroup"> {this.state.innerWidth} </div>;
-		} else {
-			return (
-				<div id="NavLinkGroup" >
-					<ul>
-						<li>
-							<NavLink name="Projects" link="https://www.example.com/" />
-						</li>
-						<li>
-							<NavLink name="Blog" link="https://www.example.com/" />
-						</li>
-						<li>
-							<NavLink name="About Me" link="https://www.example.com/" />
-						</li>
-					</ul>
-				</div>
-			);
-		}
-	}
+}
+
+
+/**
+ * NavLinkList returns an unordered list of links for
+ * the top right of the nav bar
+ * @return {element}
+ */
+function NavLinkList() {
+	return (
+		<div id="NavLinkGroup" >
+			<ul>
+				<li>
+					<NavLink name="Projects" link="https://www.example.com/" />
+				</li>
+				<li>
+					<NavLink name="Blog" link="https://www.example.com/" />
+				</li>
+				<li>
+					<NavLink name="About Me" link="https://www.example.com/" />
+				</li>
+			</ul>
+		</div>
+	);
 }
 
 /**
