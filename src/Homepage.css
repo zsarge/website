@@ -1,0 +1,67 @@
+:root {
+	--navbar-vertical-padding: .5em;
+	--page-padding-left: 5vw;
+	--page-padding-right: 5vw;
+	--image-cropper-size: 50px;
+}
+
+#Navbar {
+	width: 100%;
+	padding: 0;
+	list-style-type: none;
+	background: goldenrod;
+	display: flex;
+	white-space: nowrap;
+	justify-content: space-between;
+}
+
+#NavLinkGroup {
+	width: fit-content;
+}
+
+#Navbar .Logo {
+	padding-left: var(--page-padding-left);
+	padding-right: 1em;
+	padding-top: var(--navbar-vertical-padding);
+	padding-bottom: var(--navbar-vertical-padding);
+	width: fit-content;
+	/* background-color: black; */
+	color: white;
+}
+
+.image-cropper {
+	width: var(--image-cropper-size);
+	height: var(--image-cropper-size);
+	position: relative;
+	overflow: hidden;
+	border-radius: 50%;
+}
+
+.picture {
+	display: inline;
+	margin: 0 auto;
+	margin-left: -10%;
+	height: 100%;
+	width: auto;
+}
+
+#Navbar ul {
+	width: fit-content;
+	background-color: brown;
+	margin: auto;
+	overflow-x: visible;
+	padding-left: 0;
+	padding-right: var(--page-padding-right);
+	height: 100%;
+	position: relative;
+}
+
+#Navbar li {
+	padding-left: 1em;
+	width: fit-content;
+	color: white;
+	display: inline-flex;
+	margin: 0;
+	padding-top: var(--navbar-vertical-padding);
+	padding-bottom: var(--navbar-vertical-padding);
+}
