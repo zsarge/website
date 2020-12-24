@@ -5,7 +5,7 @@ import "./Homepage.css";
 
 /**
  * Represents the homepage for my website.
- * @return {element}
+ * @return { element }
  */
 function Homepage() {
 	return (
@@ -18,7 +18,7 @@ function Homepage() {
 /**
  * Represents the navigation bar at the top of the screen.
  * This does not scroll with the page.
- * @return {element}
+ * @return { element } Logo and NavLinkGroup
  */
 function Navbar() {
 	return (
@@ -31,7 +31,7 @@ function Navbar() {
 
 /**
  * Represents my name/logo in the top left of the navbar
- * @return { string } - Currently just my name. Should be a logo in the future
+ * @return { Element } Picture, name, and subtitle
  */
 function Logo() {
 	return (
@@ -78,8 +78,8 @@ CircularImage.propTypes = {
 };
 
 /**
- * useWindowSize has the latest window width.
- * @return {[number, number]} width, height
+ * useWindowSize uses the latest window width.
+ * @return {array} width, height
  */
 function useWindowSize() {
 	const [size, setSize] = useState([0, 0]);
@@ -110,16 +110,15 @@ function useWindowWidth() {
  * @return { element }
  */
 function NavLinkGroup() {
-	// const [width, height] = useWindowSize();
 	const width = useWindowWidth();
 	console.log(width);
 	if (width < 600) {
-		return <span>Window size: {width}</span>;
+		// TODO - Add hamburger menu
+		return <> hamburger icon </>;
 	} else {
 		return <NavLinkList />;
 	}
 }
-
 
 /**
  * NavLinkList returns an unordered list of links for

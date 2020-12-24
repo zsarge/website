@@ -5,8 +5,13 @@
 	--image-cropper-size: 53px;
 	/* Colors: */
 	--background-light: white;
+	--background-medium: lightgray;
 	--text-dark: black;
 	--text-light: gray;
+}
+
+* {
+	background: black;
 }
 
 #Navbar {
@@ -24,6 +29,7 @@
 }
 
 #Navbar .Logo {
+	background: var(--background-light);
 	padding-left: calc(var(--page-padding-left) - 2vw);
 	padding-right: 1em;
 	padding-top: var(--navbar-vertical-padding);
@@ -36,15 +42,18 @@
 }
 
 .PersonalText {
+	background: inherit;
 	padding-left: .6em;
 }
 
 .PersonalText .MyName {
+	background: inherit;
 	font-size: x-large;
 	color: var(--text-dark);
 }
 
 .PersonalText .AboutMe {
+	background: inherit;
 	font-size: medium;
 	color: var(--text-light);
 }
@@ -66,6 +75,7 @@
 }
 
 #Navbar ul {
+	background: inherit;
 	width: fit-content;
 	background-color: var(--background-light);
 	margin: auto;
@@ -77,6 +87,7 @@
 }
 
 #Navbar li {
+	background: inherit;
 	font-size: medium;
 	padding-left: 1em;
 	width: fit-content;
@@ -88,6 +99,7 @@
 }
 
 #Navbar a {
+	background: inherit;
 	color: black;
 	text-decoration: none;
 }
