@@ -39,7 +39,24 @@ function Logo() {
 	return (
 		<div className="Logo">
 			<CircularImage image={profilePicture} />
-			Zack Sargent
+			<PersonalText />
+		</div>
+	);
+}
+
+/**
+ * My name and a description below my name
+ * @return { element }
+ */
+function PersonalText() {
+	return (
+		<div className="PersonalText">
+			<div className="MyName">
+				Zack Sargent
+			</div>
+			<div className="AboutMe">
+				Lorem ipsum dolor sit amet
+			</div>
 		</div>
 	);
 }
@@ -53,8 +70,8 @@ function Logo() {
  */
 function CircularImage(props) {
 	return (
-		<div className="image-cropper">
-			<img src={props.image} alt="" className="picture" />
+		<div className="ImageCropper">
+			<img src={props.image} alt="" className="Picture" />
 		</div>
 	);
 }
@@ -63,25 +80,46 @@ CircularImage.propTypes = {
 };
 
 /**
- * Creates a group of links for the navigation bar
- * @return {element}
+ * Creates a group of links for the navigation bar.
+ * The links will be side by side on desktop, and
+ * in a hamburger menu on mobile.
  */
-function NavLinkGroup() {
-	return (
-		<div id="NavLinkGroup">
-			<ul>
-				<li>
-					<NavLink name="Projects" link="https://www.example.com/" />
-				</li>
-				<li>
-					<NavLink name="Blog" link="https://www.example.com/" />
-				</li>
-				<li>
-					<NavLink name="About Me" link="https://www.example.com/" />
-				</li>
-			</ul>
-		</div>
-	)
+class NavLinkGroup extends React.Component {
+	/**
+	 * Creates a stateful component based on
+	 * window size
+	 * @param {object} props
+	 */
+	constructor(props) {
+		super(props);
+		this.state = { width: window.innerHeight };
+	}
+	/**
+	 * Renders NavLinkGroup
+	 * @return {element}
+	 */
+	render() {
+		console.log(this.state);
+		if (this.state.innerWidth < 600) {
+			return <div id="NavLinkGroup"> {this.state.innerWidth} </div>;
+		} else {
+			return (
+				<div id="NavLinkGroup" >
+					<ul>
+						<li>
+							<NavLink name="Projects" link="https://www.example.com/" />
+						</li>
+						<li>
+							<NavLink name="Blog" link="https://www.example.com/" />
+						</li>
+						<li>
+							<NavLink name="About Me" link="https://www.example.com/" />
+						</li>
+					</ul>
+				</div>
+			);
+		}
+	}
 }
 
 /**

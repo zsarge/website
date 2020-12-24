@@ -2,14 +2,18 @@
 	--navbar-vertical-padding: .5em;
 	--page-padding-left: 5vw;
 	--page-padding-right: 5vw;
-	--image-cropper-size: 50px;
+	--image-cropper-size: 53px;
+	/* Colors: */
+	--background-light: white;
+	--text-dark: black;
+	--text-light: gray;
 }
 
 #Navbar {
 	width: 100%;
 	padding: 0;
 	list-style-type: none;
-	background: goldenrod;
+	background: var(--background-light);
 	display: flex;
 	white-space: nowrap;
 	justify-content: space-between;
@@ -20,16 +24,32 @@
 }
 
 #Navbar .Logo {
-	padding-left: var(--page-padding-left);
+	padding-left: calc(var(--page-padding-left) - 2vw);
 	padding-right: 1em;
 	padding-top: var(--navbar-vertical-padding);
 	padding-bottom: var(--navbar-vertical-padding);
 	width: fit-content;
-	/* background-color: black; */
-	color: white;
+	display: flex;
+	white-space: nowrap;
+	justify-content: space-between;
+	position: relative;
 }
 
-.image-cropper {
+.PersonalText {
+	padding-left: .6em;
+}
+
+.PersonalText .MyName {
+	font-size: x-large;
+	color: var(--text-dark);
+}
+
+.PersonalText .AboutMe {
+	font-size: medium;
+	color: var(--text-light);
+}
+
+.ImageCropper {
 	width: var(--image-cropper-size);
 	height: var(--image-cropper-size);
 	position: relative;
@@ -37,7 +57,7 @@
 	border-radius: 50%;
 }
 
-.picture {
+.Picture {
 	display: inline;
 	margin: 0 auto;
 	margin-left: -10%;
@@ -47,7 +67,7 @@
 
 #Navbar ul {
 	width: fit-content;
-	background-color: brown;
+	background-color: var(--background-light);
 	margin: auto;
 	overflow-x: visible;
 	padding-left: 0;
@@ -57,11 +77,17 @@
 }
 
 #Navbar li {
+	font-size: medium;
 	padding-left: 1em;
 	width: fit-content;
 	color: white;
 	display: inline-flex;
 	margin: 0;
-	padding-top: var(--navbar-vertical-padding);
+	padding-top: calc(calc(var(--image-cropper-size) / 2) - .22em);
 	padding-bottom: var(--navbar-vertical-padding);
+}
+
+#Navbar a {
+	color: black;
+	text-decoration: none;
 }
