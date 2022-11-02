@@ -42,10 +42,11 @@ class Board {
   }
 }
 
-class GameOfLife {
+class GridCanvas {
+  static COLOR_ENABLED = "black";
+  static COLOR_DISABLED = "white";
+
   /**
-   * @param {number} cellWidth
-   * @param {number} cellHeight
    * @param {HTMLCanvasElement} canvas
    */
   constructor(canvas) {
@@ -55,14 +56,37 @@ class GameOfLife {
     /** @type CanvasRenderingContext2D */
     this.ctx = canvas.getContext("2d");
 
-    const SQUARE_SIZE = 15; // size of cell in pixels
     /** @const {number} */
-    this.SQUARE_SIZE = SQUARE_SIZE;
+    this.SQUARE_SIZE = 15;
 
     /** @type number */
-    this.cellsWide = Math.ceil(this.canvas.width / SQUARE_SIZE);
+    this.cellsWide = Math.ceil(this.canvas.width / this.SQUARE_SIZE);
     /** @type number */
-    this.cellsHigh = Math.ceil(this.canvas.height / SQUARE_SIZE);
+    this.cellsHigh = Math.ceil(this.canvas.height / this.SQUARE_SIZE);
+  }
+
+  /**
+   * Resizes the canvas element to fit the window
+   * @param {HTMLCanvasElement} canvas
+   */
+  resizeCanvas() {
+    const ele = this.canvas.parentElement;
+    const height = ele.clientHeight;
+    const width = ele.clientWidth;
+
+    this.canvas.width = width;
+    this.canvas.height = height;
+    this.canvas.style.width = `${width}px`;
+    this.canvas.style.height = `${height}px`;
+  }
+}
+
+class GameOfLife extends GridCanvas {
+  /**
+   * @param {HTMLCanvasElement} canvas
+   */
+  constructor(canvas) {
+    super(canvas);
 
     /** @type Board */
     this.board = new Board(this.cellsWide, this.cellsHigh);
@@ -71,23 +95,14 @@ class GameOfLife {
   }
 
   /**
-   *
-   * @param {HTMLCanvasElement} canvas
-   */
-  resizeCanvas() {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight / 3;
-    this.canvas.style.width = `${window.innerWidth}px`;
-    this.canvas.style.height = `${window.innerHeight / 3}px`;
-  }
-
-  /**
    * Draws the board to the canvas context
    */
   draw() {
     for (let y = 0; y < this.cellsHigh; y++) {
       for (let x = 0; x < this.cellsWide; x++) {
-        this.ctx.fillStyle = this.board.get(x, y) ? "black" : "white";
+        this.ctx.fillStyle = this.board.get(x, y)
+          ? GameOfLife.COLOR_ENABLED
+          : GameOfLife.COLOR_DISABLED;
         this.ctx.fillRect(
           x * this.SQUARE_SIZE,
           y * this.SQUARE_SIZE,
@@ -186,29 +201,89 @@ class GameOfLife {
     this.board = this.nextBoard;
     this.nextBoard = tmp;
   }
+
+  randomize() {
+    this.board.board = this.board.board.map(() => 1 * (Math.random() > 0.5));
+  }
 }
 
-const canvas = document.getElementById("conway-canvas");
+class Name extends GridCanvas {
+  /**
+   * Creates a new name, to overlay the game canvas
+   * @param {HTMLCanvasElement} canvas
+   */
+  constructor(canvas) {
+    super(canvas);
+  }
 
-if (canvas.getContext) {
-  const conway = new GameOfLife(canvas);
+  // prettier-ignore
+  static GRID = [
+    [ 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+    [ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1 ],
+    [ 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1 ],
+    [ 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0 ],
+    [ 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0 ],
+    [ 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1 ],
+    [ 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1 ],
+  ];
 
-  conway.board.set(5, 5, 1);
-  conway.board.set(6, 6, 1);
-  conway.board.set(7, 6, 1);
-  conway.board.set(7, 5, 1);
-  conway.board.set(7, 4, 1);
+  draw() {
+    // this.ctx.fillStyle = "red";
+
+    let nameHeight = Name.GRID.length;
+    let nameWidth = Name.GRID[0].length;
+    let leftOffset = Math.ceil(this.cellsWide / 2 - nameWidth);
+    let topOffset = Math.ceil(this.cellsHigh / 2 - nameHeight);
+
+    for (let y = 0; y < nameHeight; y++) {
+      for (let x = 0; x < nameWidth; x++) {
+        if (Name.GRID[y][x]) {
+          // fill
+          //   let color = Name.COLOR_ENABLED;
+          let color = "red";
+          this.ctx.fillStyle = color;
+          this.ctx.strokeStyle = color;
+          const args = [
+            x * this.SQUARE_SIZE + leftOffset * this.SQUARE_SIZE,
+            y * this.SQUARE_SIZE + topOffset * this.SQUARE_SIZE,
+            this.SQUARE_SIZE,
+            this.SQUARE_SIZE,
+          ];
+          this.ctx.fillRect(...args);
+          this.ctx.strokeRect(...args);
+        }
+      }
+    }
+  }
+}
+
+const conwayCanvas = document.getElementById("conway-canvas");
+const nameCanvas = document.getElementById("name-canvas");
+
+if (conwayCanvas.getContext && nameCanvas.getContext) {
+  const conway = new GameOfLife(conwayCanvas);
+  const name = new Name(nameCanvas);
+
+  conway.randomize();
+
+  conway.draw();
+  name.draw();
 
   let gameInterval = setInterval(() => {
     conway.tick();
     conway.draw();
   }, 100);
 
-  window.addEventListener("resize", conway.resizeCanvas, true);
+  const callback = () => {
+    // needed to maintain the proper `this` context
+    conway.resizeCanvas();
+  };
+  window.addEventListener("resize", callback, true);
 
   document.getElementById("stop-game").addEventListener("click", () => {
     clearInterval(gameInterval);
-    window.removeEventListener("resize", conway.resizeCanvas);
+    window.removeEventListener("resize", callback);
   });
 } else {
   alert("canvas isn't supported lol");

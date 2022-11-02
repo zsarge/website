@@ -3,20 +3,27 @@
   padding: 0;
 }
 
-#conway-container {
-  overflow-x: hidden;
-  border: 0;
-  padding: 0;
-}
-
 body,
 html {
   height: 100%;
 }
 
-/* #conway-canvas {
-  overflow-x: hidden;
+#conway-container {
+  position: relative;
+  overflow: hidden;
+  height: 30%;
+}
+
+#conway-canvas {
   position: absolute;
-  height: 100%;
-  width: 100%;
-} */
+  left: 0;
+  top: 0;
+  z-index: 0;
+}
+
+#name-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
