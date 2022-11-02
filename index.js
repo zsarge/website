@@ -51,10 +51,11 @@ class GameOfLife {
   constructor(canvas) {
     /** @type HTMLCanvasElement */
     this.canvas = canvas;
+    this.resizeCanvas();
     /** @type CanvasRenderingContext2D */
     this.ctx = canvas.getContext("2d");
 
-    const SQUARE_SIZE = 10; // size of cell in pixels
+    const SQUARE_SIZE = 15; // size of cell in pixels
     /** @const {number} */
     this.SQUARE_SIZE = SQUARE_SIZE;
 
@@ -67,6 +68,17 @@ class GameOfLife {
     this.board = new Board(this.cellsWide, this.cellsHigh);
     /** @type Board */
     this.nextBoard = new Board(this.cellsWide, this.cellsHigh);
+  }
+
+  /**
+   *
+   * @param {HTMLCanvasElement} canvas
+   */
+  resizeCanvas() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight / 3;
+    this.canvas.style.width = `${window.innerWidth}px`;
+    this.canvas.style.height = `${window.innerHeight / 3}px`;
   }
 
   /**
@@ -168,21 +180,14 @@ class GameOfLife {
         this.#applyRules(x, y);
       }
     }
-  }
 
-  /**
-   * Swaps the two boards
-   */
-  swapBuffers() {
+    // swaps the two buffers
     let tmp = this.board;
     this.board = this.nextBoard;
     this.nextBoard = tmp;
   }
 }
 
-/**
- * @type HTMLCanvasElement
- */
 const canvas = document.getElementById("conway-canvas");
 
 if (canvas.getContext) {
@@ -194,17 +199,17 @@ if (canvas.getContext) {
   conway.board.set(7, 5, 1);
   conway.board.set(7, 4, 1);
 
-  setInterval(() => {
+  let gameInterval = setInterval(() => {
     conway.tick();
     conway.draw();
-    conway.swapBuffers();
   }, 100);
 
-  // TODO: Handle association with an array
-  // TODO: Create class for CGOL
+  window.addEventListener("resize", conway.resizeCanvas, true);
 
-  // TODO: for each ele in UINT8ARRAY, either draw a black rectangle or a clear rectangle
-  // TODO: draw the minmum amount of rects necessary
+  document.getElementById("stop-game").addEventListener("click", () => {
+    clearInterval(gameInterval);
+    window.removeEventListener("resize", conway.resizeCanvas);
+  });
 } else {
   alert("canvas isn't supported lol");
   // TODO: have backup image

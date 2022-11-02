@@ -1,3 +1,22 @@
-#conway-canvas {
-    border: 0.5rem dotted pink;
+* {
+  margin: 0;
+  padding: 0;
 }
+
+#conway-container {
+  overflow-x: hidden;
+  border: 0;
+  padding: 0;
+}
+
+body,
+html {
+  height: 100%;
+}
+
+/* #conway-canvas {
+  overflow-x: hidden;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+} */
