@@ -185,6 +185,7 @@ class GameOfLife extends GridCanvas {
       else this.#setNext(x, y, 0);
     }
   }
+
   /**
    * Updates the game state
    */
@@ -233,8 +234,8 @@ class Name extends GridCanvas {
 
     let nameHeight = Name.GRID.length;
     let nameWidth = Name.GRID[0].length;
-    let leftOffset = Math.ceil(this.cellsWide / 2 - nameWidth);
-    let topOffset = Math.ceil(this.cellsHigh / 2 - nameHeight);
+    let leftOffset = Math.ceil(this.cellsWide / 2 - nameWidth / 2);
+    let topOffset = Math.ceil(this.cellsHigh / 2 - nameHeight / 2);
 
     for (let y = 0; y < nameHeight; y++) {
       for (let x = 0; x < nameWidth; x++) {
