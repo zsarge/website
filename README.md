@@ -9,16 +9,3 @@ This repository has separate branches:
  - [gh-pages](https://github.com/zsarge/website/tree/gh-pages)
    - This is where I push the code to be hosted on https://zsarge.github.io/website/
 
-------------
-
-## To Read:
-
- - https://react-bootstrap.github.io/components/dropdowns/
- - https://styled-components.com
-
-## To Do:
-
- - Make subtitle something like `a 16.555555 year old developer`
- - Make Hamburger Menu
- - Look into MDX.js
-   - Make way to organize all mdx.js websites
