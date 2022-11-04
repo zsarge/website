@@ -1,3 +1,5 @@
+// TODO: Remove Name mask layer & apply name as mask on Game start
+
 class Board {
   /**
    * Create a 2d interface for a Uint8 array
@@ -282,6 +284,7 @@ if (conwayCanvas.getContext && nameCanvas.getContext) {
   };
   window.addEventListener("resize", callback, true);
 
+  // TODO: create better button handling (e.g. reset button)
   document.getElementById("stop-game").addEventListener("click", () => {
     clearInterval(gameInterval);
     window.removeEventListener("resize", callback);
