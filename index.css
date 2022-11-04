@@ -1,5 +1,11 @@
 /* TODO: add countdown timer bar to act like a delay before the game starts running */
 
+:root {
+  --color-primary: #114310;
+  --color-secondary: #2b1357;
+  --color-accent: #190b32;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -28,4 +34,37 @@ html {
   left: 0;
   top: 0;
   z-index: 1;
+}
+
+.loader {
+  width: 100%;
+  aspect-ratio: 50/1;
+
+  position: relative;
+  overflow: hidden;
+}
+
+.loader::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  background: var(--color-primary);
+
+  animation: loading 3s linear forwards;
+}
+
+@keyframes loading {
+  0% {
+    left: 0;
+    right: 0;
+  }
+  50% {
+    left: 0;
+    right: 50%;
+  }
+  100% {
+    left: 0;
+    right: 100%;
+    display: none;
+  }
 }
