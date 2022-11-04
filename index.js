@@ -44,10 +44,9 @@ class Board {
   }
 }
 
-class GridCanvas {
+class GameOfLife {
   static COLOR_ENABLED = "black";
   static COLOR_DISABLED = "white";
-
   /**
    * @param {HTMLCanvasElement} canvas
    */
@@ -65,30 +64,6 @@ class GridCanvas {
     this.cellsWide = Math.ceil(this.canvas.width / this.SQUARE_SIZE);
     /** @type number */
     this.cellsHigh = Math.ceil(this.canvas.height / this.SQUARE_SIZE);
-  }
-
-  /**
-   * Resizes the canvas element to fit the window
-   * @param {HTMLCanvasElement} canvas
-   */
-  resizeCanvas() {
-    const ele = this.canvas.parentElement;
-    const height = ele.clientHeight;
-    const width = ele.clientWidth;
-
-    this.canvas.width = width;
-    this.canvas.height = height;
-    this.canvas.style.width = `${width}px`;
-    this.canvas.style.height = `${height}px`;
-  }
-}
-
-class GameOfLife extends GridCanvas {
-  /**
-   * @param {HTMLCanvasElement} canvas
-   */
-  constructor(canvas) {
-    super(canvas);
 
     /** @type Board */
     this.board = new Board(this.cellsWide, this.cellsHigh);
@@ -121,6 +96,21 @@ class GameOfLife extends GridCanvas {
         );
       }
     }
+  }
+
+  /**
+   * Resizes the canvas element to fit the window
+   * @param {HTMLCanvasElement} canvas
+   */
+  resizeCanvas() {
+    const ele = this.canvas.parentElement;
+    const height = ele.clientHeight;
+    const width = ele.clientWidth;
+
+    this.canvas.width = width;
+    this.canvas.height = height;
+    this.canvas.style.width = `${width}px`;
+    this.canvas.style.height = `${height}px`;
   }
 
   /**
@@ -205,78 +195,71 @@ class GameOfLife extends GridCanvas {
     this.nextBoard = tmp;
   }
 
+  /**
+   * @param {number[][]} mask
+   * @param {number} offsetX
+   * @param {number} offsetY
+   */
+  applyMask(mask, offsetX, offsetY) {
+    for (let y = 0; y < mask.length; y++) {
+      for (let x = 0; x < mask[0].length; x++) {
+        this.board.set(x + offsetX, y + offsetY, mask[y][x]);
+      }
+    }
+  }
+
+  /**
+   *
+   * @param {number[][]} mask
+   */
+  centerMask(mask) {
+    let nameHeight = GRID.length;
+    let nameWidth = GRID[0].length;
+    let leftOffset = Math.ceil(this.cellsWide / 2 - nameWidth / 2);
+    let topOffset = Math.ceil(this.cellsHigh / 2 - nameHeight / 2);
+    this.applyMask(mask, leftOffset, topOffset);
+  }
+
   randomize() {
     this.board.board = this.board.board.map(() => 1 * (Math.random() > 0.5));
   }
 }
 
-class Name extends GridCanvas {
-  /**
-   * Creates a new name, to overlay the game canvas
-   * @param {HTMLCanvasElement} canvas
-   */
-  constructor(canvas) {
-    super(canvas);
-  }
-
-  // prettier-ignore
-  static GRID = [
-    [ 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-    [ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1 ],
-    [ 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1 ],
-    [ 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0 ],
-    [ 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0 ],
-    [ 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0 ],
-    [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1 ],
-    [ 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1 ],
-  ];
-
-  draw() {
-    // this.ctx.fillStyle = "red";
-
-    let nameHeight = Name.GRID.length;
-    let nameWidth = Name.GRID[0].length;
-    let leftOffset = Math.ceil(this.cellsWide / 2 - nameWidth / 2);
-    let topOffset = Math.ceil(this.cellsHigh / 2 - nameHeight / 2);
-
-    for (let y = 0; y < nameHeight; y++) {
-      for (let x = 0; x < nameWidth; x++) {
-        if (Name.GRID[y][x]) {
-          // fill
-          //   let color = Name.COLOR_ENABLED;
-          let color = "red";
-          this.ctx.fillStyle = color;
-          this.ctx.strokeStyle = color;
-          const args = [
-            x * this.SQUARE_SIZE + leftOffset * this.SQUARE_SIZE,
-            y * this.SQUARE_SIZE + topOffset * this.SQUARE_SIZE,
-            this.SQUARE_SIZE,
-            this.SQUARE_SIZE,
-          ];
-          this.ctx.fillRect(...args);
-          this.ctx.strokeRect(...args);
-        }
-      }
-    }
-  }
-}
+// prettier-ignore
+const GRID = [
+  [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+  [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+  [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+  [ 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+  [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0 ],
+  [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0 ],
+  [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0 ],
+  [ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 ],
+  [ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0 ],
+  [ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0 ],
+  [ 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0 ],
+  [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+  [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+  [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+];
 
 const conwayCanvas = document.getElementById("conway-canvas");
-const nameCanvas = document.getElementById("name-canvas");
 
-if (conwayCanvas.getContext && nameCanvas.getContext) {
+if (conwayCanvas.getContext) {
   const conway = new GameOfLife(conwayCanvas);
-  const name = new Name(nameCanvas);
 
   conway.randomize();
+  conway.centerMask(GRID);
 
   conway.draw();
-  name.draw();
 
-  let gameInterval = setInterval(() => {
-    conway.tick();
-    conway.draw();
-  }, 100);
+  let gameInterval;
+  setTimeout(() => {
+    gameInterval = setInterval(() => {
+      conway.tick();
+      conway.draw();
+    }, 100);
+  }, 3_000);
 
   const callback = () => {
     // needed to maintain the proper `this` context
