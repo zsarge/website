@@ -57,8 +57,14 @@ class GameOfLife {
     /** @type CanvasRenderingContext2D */
     this.ctx = canvas.getContext("2d");
 
-    /** @const {number} */
-    this.SQUARE_SIZE = 15;
+    const width = this.canvas.parentElement.clientWidth;
+    if (width < 500) {
+      /** @const {number} */
+      this.SQUARE_SIZE = 9;
+    } else {
+      /** @const {number} */
+      this.SQUARE_SIZE = 15;
+    }
 
     /** @type number */
     this.cellsWide = Math.ceil(this.canvas.width / this.SQUARE_SIZE);
@@ -265,7 +271,7 @@ if (conwayCanvas.getContext) {
     // needed to maintain the proper `this` context
     conway.resizeCanvas();
   };
-  window.addEventListener("resize", callback, true);
+  // window.addEventListener("resize", callback, true);
 
   // TODO: create better button handling (e.g. reset button)
   document.getElementById("stop-game").addEventListener("click", () => {
