@@ -253,19 +253,25 @@ const conwayCanvas = document.getElementById("conway-canvas");
 
 if (conwayCanvas.getContext) {
   const conway = new GameOfLife(conwayCanvas);
-
-  conway.randomize();
-  conway.centerMask(GRID);
-
-  conway.draw();
-
   let gameInterval;
-  setTimeout(() => {
-    gameInterval = setInterval(() => {
-      conway.tick();
-      conway.draw();
-    }, 100);
-  }, 3_000);
+
+  function startGame() {
+    conway.randomize();
+    conway.centerMask(GRID);
+
+    conway.draw();
+
+    if (gameInterval) {
+      clearInterval(gameInterval);
+    }
+    setTimeout(() => {
+      gameInterval = setInterval(() => {
+        conway.tick();
+        conway.draw();
+      }, 100);
+    }, 3_000);
+  }
+  startGame();
 
   const callback = () => {
     // needed to maintain the proper `this` context
@@ -273,7 +279,10 @@ if (conwayCanvas.getContext) {
   };
   // window.addEventListener("resize", callback, true);
 
-  // TODO: create better button handling (e.g. reset button)
+  document.getElementById("restart-game").addEventListener("click", () => {
+    startGame();
+  });
+
   document.getElementById("stop-game").addEventListener("click", () => {
     clearInterval(gameInterval);
     window.removeEventListener("resize", callback);
